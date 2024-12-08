@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lama AI (LAI) - Meme Token on Solana</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        header p {
+            font-size: 1.3rem;
+            margin-top: 10px;
+        }
+        #hero {
+            background: url('lama-ai-bg.jpg') center/cover no-repeat;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            position: relative;
+        }
+        #hero::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        #hero h2 {
+            font-size: 3rem;
+            z-index: 1;
+            animation: pulse 3s infinite;
+        }
+        .button {
+            padding: 15px 30px;
+            background: #ff9f1a;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0px 5px 15px rgba(255, 159, 26, 0.6);
+            transition: background 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background: #e68a00;
+            transform: translateY(-5px);
+        }
+        #about, #community, #buy-now {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        #about h2, #community h2, #buy-now h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        #about p, #community p, #buy-now p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            color: #fff;
+            text-align: center;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.3);
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #111;
+            color: #fff;
+        }
+        footer a {
+            color: #ff9f1a;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lama AI (LAI) - The Meme Token of the Future</h1>
+        <p>Blazing fast, community-driven, and powered by Solana.</p>
+    </header>
+    <div id="hero">
+        <h2>Join the Meme Revolution!</h2>
+    </div>
+    <section id="about">
+        <h2>About Lama AI</h2>
+        <p>
+            Lama AI (LAI) combines cutting-edge artificial intelligence with the vibrant power of memes. Built on the Solana blockchain, LAI offers lightning-fast transactions, minimal fees, and a thriving global community. Whether you're a meme enthusiast or a blockchain believer, Lama AI is your gateway to the moon.
+        </p>
+    </section>
+    <section id="community">
+        <h2>Why Choose Lama AI?</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Speed</h3>
+                <p>Enjoy near-instant transactions with Solana's state-of-the-art infrastructure.</p>
+            </div>
+            <div class="card">
+                <h3>Security</h3>
+                <p>Strong blockchain foundations ensure that your assets are always safe.</p>
+            </div>
+            <div class="card">
+                <h3>Community</h3>
+                <p>Join a global movement of meme and blockchain enthusiasts pushing the boundaries of creativity.</p>
+            </div>
+        </div>
+    </section>
+    <section id="buy-now">
+        <h2>How to Get Lama AI (LAI)</h2>
+        <p>Start your journey to the moon by trading Lama AI on <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank">our marketplace</a>.</p>
+        <p><strong>Token Address:</strong> 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5</p>
+        <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank" class="button">Trade LAI Now</a>
+    </section>
+    <footer>
+        <p>© 2024 Lama AI (LAI). All Rights Reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+</body>
+</html>
