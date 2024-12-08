@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lama AI (LAI) - Meme Token on Solana</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #141e30, #243b55);
+            color: white;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 50px;
+        }
+        header h1 {
+            font-size: 3rem;
+            animation: fadeIn 2s ease-out;
+        }
+        header p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            animation: fadeIn 3s ease-out;
+        }
+        #hero {
+            background-image: url('/img/lai_logo.jpg'); /* Replace this with your actual image path */
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        #hero h2 {
+            font-size: 2.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px 40px;
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+        #about, #community, #vision {
+            padding: 50px 20px;
+            text-align: center;
+        }
+        #about h2, #community h2, #vision h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .card {
+            background: #1e3c72;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 0 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #0c111d;
+        }
+        footer a {
+            color: #00d1b2;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Lama AI (LAI)</h1>
+        <p>The ultimate meme token on the Solana blockchain</p>
+    </header>
+    <div id="hero">
+        <h2>To the Moon with Trust and Community!</h2>
+    </div>
+    <section id="about">
+        <h2>About Lama AI</h2>
+        <p>
+            Lama AI (LAI) is a revolutionary meme token built on the Solana blockchain. Inspired by the power of artificial intelligence and the vibrant spirit of memes, LAI combines cutting-edge technology with the magic of a united community.
+        </p>
+    </section>
+    <section id="community">
+        <h2>Our Community</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Trust</h3>
+                <p>Trust is at the heart of everything we do. Our transparent and secure ecosystem ensures a solid foundation for all our members.</p>
+            </div>
+            <div class="card">
+                <h3>Connection</h3>
+                <p>Join a growing global community of enthusiasts passionate about memes, blockchain, and a shared vision for the future.</p>
+            </div>
+            <div class="card">
+                <h3>Innovation</h3>
+                <p>Powered by Solana, Lama AI brings blazing-fast transactions and a highly scalable infrastructure to the meme token world.</p>
+            </div>
+        </div>
+    </section>
+    <section id="vision">
+        <h2>Our Vision</h2>
+        <p>
+            To create a fun, engaging, and secure environment where memes meet blockchain, fueled by trust, creativity, and a shared dream of going to the moon!
+        </p>
+    </section>
+    <footer>
+        <p>Join the journey on Solana! <a href="#">Learn more</a></p>
+    </footer>
+</body>
+</html>
