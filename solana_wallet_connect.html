@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Solana Wallet</title>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js"></script>
+</head>
+<body>
+    <h1>Connect to Solana Wallet</h1>
+    <button id="connectButton">Connect Wallet</button>
+    <p id="walletAddress"></p>
+
+    <script>
+        document.getElementById("connectButton").addEventListener("click", async () => {
+            try {
+                // Check if the browser wallet is available
+                if (!window.solana) {
+                    alert("Solana wallet not found. Please install Phantom or another compatible wallet.");
+                    return;
+                }
+
+                // Request connection to the wallet
+                const response = await window.solana.connect();
+                const walletAddress = response.publicKey.toString();
+
+                // Display the connected wallet address
+                document.getElementById("walletAddress").innerText = `Connected wallet: ${walletAddress}`;
+                console.log("Connected wallet:", walletAddress);
+            } catch (err) {
+                console.error("Wallet connection failed:", err.message);
+            }
+        });
+    </script>
+</body>
+</html>
