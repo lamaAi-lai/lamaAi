@@ -165,6 +165,12 @@
             top:8px;
             left:6px;
         }
+        #walletAddress {
+            position:fixed;
+            width:auto; height:auto;
+            top:26px;
+            left:56px;
+        }
     </style>
 
 
@@ -198,7 +204,7 @@
                 const walletAddress = response.publicKey.toString();
 
                 // Display the connected wallet address
-                document.getElementById("walletAddress").innerText = `Connected wallet: ${walletAddress}`;
+                document.getElementById("walletAddress").innerText = `${walletAddress}`;
                 console.log("Connected wallet:", walletAddress);
             } catch (err) {
                 console.error("Wallet connection failed:", err.message);
