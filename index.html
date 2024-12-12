@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lama AI (LAI) - Unified Landing Page</title>
-       <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.82.0/dist/web3.min.js"></script>
-    <style>
+   <style>
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
@@ -265,74 +264,7 @@ More details to be announced.</p>
     <br><br>
 
 
-    
-<p> Support LamaAi SOL with a donation.  </p>
-    <form id="donation-form">
-        <label for="amount">Betrag (in SOL):</label>
-        <input type="number" id="amount" name="amount" step="0.01" min="0.01" required>
-        <button type="button" onclick="sendDonation()">Mit Phantom Wallet spenden</button>
-    </form>
 
-    <script>
-        // Solana Empfängeradresse
-        const recipientAddress = "HrxY7rCeakGxaa5MJeQhmJqMmiKLzgk7cPL7Rz3qFPg9"; // Ersetzen Sie dies mit der Zieladresse
-
-        // Verbindung mit Phantom Wallet herstellen
-        async function connectWallet() {
-            if (window.solana && window.solana.isPhantom) {
-                try {
-                    const resp = await window.solana.connect();
-                    console.log("Verbindung hergestellt:", resp.publicKey.toString());
-                    return resp.publicKey;
-                } catch (err) {
-                    console.error("Wallet-Verbindung fehlgeschlagen:", err);
-                }
-            } else {
-                alert("Bitte installieren Sie die Phantom Wallet Erweiterung.");
-            }
-        }
-
-        // Spendenfunktion
-        async function sendDonation() {
-            const amount = parseFloat(document.getElementById("amount").value);
-            if (isNaN(amount) || amount <= 0) {
-                alert("Bitte geben Sie einen gültigen Betrag ein.");
-                return;
-            }
-
-            if (!window.solana || !window.solana.isPhantom) {
-                alert("Bitte verbinden Sie zuerst Ihre Phantom Wallet.");
-                return;
-            }
-
-            try {
-                // Verbindung zur Wallet herstellen
-                const wallet = await connectWallet();
-                if (!wallet) return;
-
-                // Verbindung zur Solana-Blockchain
-                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
-
-                // Transaktion erstellen
-                const transaction = new solanaWeb3.Transaction().add(
-                    solanaWeb3.SystemProgram.transfer({
-                        fromPubkey: wallet,
-                        toPubkey: new solanaWeb3.PublicKey(recipientAddress),
-                        lamports: solanaWeb3.LAMPORTS_PER_SOL * amount // SOL in Lamports umrechnen
-                    })
-                );
-
-                // Transaktion signieren und senden
-                const { signature } = await window.solana.signAndSendTransaction(transaction);
-                console.log("Transaktion erfolgreich:", signature);
-
-                alert("Vielen Dank für Ihre Spende! Transaktion-ID: " + signature);
-            } catch (err) {
-                console.error("Fehler bei der Spende:", err);
-                alert("Fehler bei der Spende: " + err.message);
-            }
-        }
-    </script>
 
     
 
