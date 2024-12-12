@@ -261,6 +261,83 @@ More details to be announced.</p>
         <p>Start your journey to the moon 🚀 by trading Lama AI ($LAI) on <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank">our marketplace</a>.</p>
         <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank" class="button">Trade $LAI Now</a>
     </section>
+    <br><br>
+
+
+    
+<p> Support LamaAi SOL with a donation.  </p>
+    <form id="donation-form">
+        <label for="amount">Betrag (in SOL):</label>
+        <input type="number" id="amount" name="amount" step="0.01" min="0.01" required>
+        <button type="button" onclick="sendDonation()">Mit Phantom Wallet spenden</button>
+    </form>
+
+    <script>
+        // Solana Empfängeradresse
+        const recipientAddress = "HrxY7rCeakGxaa5MJeQhmJqMmiKLzgk7cPL7Rz3qFPg9"; // Ersetzen Sie dies mit der Zieladresse
+
+        // Verbindung mit Phantom Wallet herstellen
+        async function connectWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const resp = await window.solana.connect();
+                    console.log("Verbindung hergestellt:", resp.publicKey.toString());
+                    return resp.publicKey;
+                } catch (err) {
+                    console.error("Wallet-Verbindung fehlgeschlagen:", err);
+                }
+            } else {
+                alert("Bitte installieren Sie die Phantom Wallet Erweiterung.");
+            }
+        }
+
+        // Spendenfunktion
+        async function sendDonation() {
+            const amount = parseFloat(document.getElementById("amount").value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Bitte geben Sie einen gültigen Betrag ein.");
+                return;
+            }
+
+            if (!window.solana || !window.solana.isPhantom) {
+                alert("Bitte verbinden Sie zuerst Ihre Phantom Wallet.");
+                return;
+            }
+
+            try {
+                // Verbindung zur Wallet herstellen
+                const wallet = await connectWallet();
+                if (!wallet) return;
+
+                // Verbindung zur Solana-Blockchain
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
+
+                // Transaktion erstellen
+                const transaction = new solanaWeb3.Transaction().add(
+                    solanaWeb3.SystemProgram.transfer({
+                        fromPubkey: wallet,
+                        toPubkey: new solanaWeb3.PublicKey(recipientAddress),
+                        lamports: solanaWeb3.LAMPORTS_PER_SOL * amount // SOL in Lamports umrechnen
+                    })
+                );
+
+                // Transaktion signieren und senden
+                const { signature } = await window.solana.signAndSendTransaction(transaction);
+                console.log("Transaktion erfolgreich:", signature);
+
+                alert("Vielen Dank für Ihre Spende! Transaktion-ID: " + signature);
+            } catch (err) {
+                console.error("Fehler bei der Spende:", err);
+                alert("Fehler bei der Spende: " + err.message);
+            }
+        }
+    </script>
+
+    
+
+
+
+    
     <section id="context-eins">
         The LamaAI Token ($LAI) is at the forefront of innovation by combining blockchain technology and artificial intelligence. With its unique focus on efficiency, scalability and transparency, $LAI is more than just a token - it is the key to a connected and automated future. 
         Our goal is to create a platform that optimizes AI processes while benefiting from the security and decentralization of the blockchain. Backed by an engaged community and a clear roadmap, $LAI is revolutionizing the way we use digital technologies.  
