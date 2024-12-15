@@ -255,6 +255,23 @@ More details to be announced.</p>
         <h2>Token Address</h2>
         <p>Use this address to trade securely:</p>
         <div class="token-address">7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</div>
+
+
+<section id="token-copy" style="text-align: center; padding: 20px;">
+    <p>Token-Adresse:</p>
+    <input type="text" id="tokenAddress" value="7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" readonly>
+    <button onclick="copyAddress()" style="cursor: pointer; padding: 10px;">Kopieren</button>
+    <script>
+        function copyAddress() {
+            const address = document.getElementById('tokenAddress');
+            navigator.clipboard.writeText(address.value);
+            alert('Token-Adresse wurde kopiert!');
+        }
+    </script>
+</section>
+
+
+        
     </section>
     <section id="buy-now">
         <h2>How to Get Lama AI (LAI)</h2>
