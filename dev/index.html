@@ -266,6 +266,40 @@ More details to be announced.</p>
 
 
 
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<section id="lai-chart" style="padding: 40px; text-align: center;">
+    <h2>Lama AI Live-Daten</h2>
+    <canvas id="laiChart" width="400" height="200"></canvas>
+    <script>
+        const ctx = document.getElementById('laiChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Lama AI (LAI) Preis',
+                    data: [5, 10, 7, 15, 20],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { display: true },
+                    y: { display: true }
+                }
+            }
+        });
+    </script>
+</section>
+
+
+
+
+
     
 
 
