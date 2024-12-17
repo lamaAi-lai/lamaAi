@@ -52,11 +52,11 @@
   
   <main>
     <p>Dies ist eine leere HTML-Seite mit integrierter Unterstützung für CSS und JavaScript.</p>
-    <button id="testButton">Klicke mich!</button>
+    <button id="testButton">refresh me</button>
 
     <p>SVG</p>
-    <svg class="icon" width="100" height="100">
-  <use xlink:href="./grafik.svg"></use>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="100" height="100">
+  <use href="./grafik.svg"></use>
 </svg>
   
   
@@ -73,7 +73,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const button = document.getElementById('testButton');
       button.addEventListener('click', () => {
-        alert('Button wurde geklickt!');
+        window.location.reload();
       });
     });
   </script>
