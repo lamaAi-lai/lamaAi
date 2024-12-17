@@ -1,9 +1,82 @@
-<svg class="icon" width="100" height="100">
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Leere HTML-Seite</title>
+  <!-- Externes CSS -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em 0;
+    }
+
+    main {
+      margin: 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1em 0;
+      background-color: #333;
+      color: #fff;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Willkommen!</h1>
+  </header>
+  
+  <main>
+    <p>Dies ist eine leere HTML-Seite mit integrierter Unterstützung für CSS und JavaScript.</p>
+    <button id="testButton">Klicke mich!</button>
+
+    <p>SVG
+    <svg class="icon" width="100" height="100">
   <use xlink:href="grafik.svg#element-id"></use>
 </svg>
+    </p>
 
 <style>
   .icon {
     fill: green; /* Färbt das SVG-Element */
   }
 </style>
+
+  </main>
+
+  <footer>
+    &copy; 2024 Deine Website
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const button = document.getElementById('testButton');
+      button.addEventListener('click', () => {
+        alert('Button wurde geklickt!');
+      });
+    });
+  </script>
+</body>
+</html>
+
+
