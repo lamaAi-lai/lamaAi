@@ -22,28 +22,34 @@
         // Verbindung zur Phantom Wallet herstellen
         connectButton.addEventListener("click", async () => {
             try {
-                // Überprüfen, ob Phantom Wallet vorhanden ist
                 if (window.solana && window.solana.isPhantom) {
+                    console.log("Phantom Wallet gefunden.");
                     const response = await window.solana.connect();
                     walletAddress = response.publicKey.toString();
+                    console.log("Wallet-Adresse:", walletAddress);
+
                     walletAddressDisplay.textContent = `Wallet-Adresse: ${walletAddress}`;
-                    getBalance(walletAddress);
+                    await getBalance(walletAddress);
                 } else {
-                    alert("Phantom Wallet ist nicht installiert. Bitte installieren Sie die Phantom Wallet-Erweiterung.");
+                    alert("Phantom Wallet ist nicht installiert. Bitte installieren Sie die Erweiterung.");
+                    console.error("Phantom Wallet nicht gefunden.");
                 }
             } catch (err) {
-                console.error("Fehler bei der Verbindung zur Phantom Wallet:", err);
+                console.error("Fehler bei der Wallet-Verbindung:", err);
+                alert("Verbindung zur Phantom Wallet fehlgeschlagen.");
             }
         });
 
         // Kontostand abrufen
         async function getBalance(address) {
             try {
+                console.log("Starte Abruf des Kontostands...");
                 const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
                 const publicKey = new solanaWeb3.PublicKey(address);
 
                 const balance = await connection.getBalance(publicKey);
                 const solBalance = balance / solanaWeb3.LAMPORTS_PER_SOL;
+                console.log(`Kontostand: ${solBalance} SOL`);
                 balanceDisplay.textContent = `Kontostand: ${solBalance} SOL`;
             } catch (err) {
                 console.error("Fehler beim Abrufen des Kontostands:", err);
