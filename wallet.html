@@ -56,6 +56,11 @@
                 balanceDisplay.textContent = "Kontostand: Fehler beim Abrufen";
             }
         }
+
+        fetch('https://api.mainnet-beta.solana.com')
+    .then(response => console.log('Cluster erreichbar:', response.status))
+    .catch(err => console.error('Cluster nicht erreichbar:', err));
+
     </script>
 </body>
 </html>
