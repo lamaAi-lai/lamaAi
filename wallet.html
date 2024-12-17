@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solana Wallet Debug</title>
+    <title>Solana Debug</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.76.0/solana-web3.min.js"></script>
 </head>
 <body>
-    <h1>Solana Wallet Debug</h1>
+    <h1>Solana Wallet Debugging</h1>
     <button id="connectWallet">Phantom Wallet verbinden</button>
     <p id="walletAddress">Wallet-Adresse: Noch nicht verbunden</p>
     <p id="balance">Kontostand: --</p>
@@ -21,58 +21,53 @@
 
         connectButton.addEventListener("click", async () => {
             try {
-                // Prüfen, ob Phantom Wallet installiert ist
                 if (window.solana && window.solana.isPhantom) {
                     console.log("Phantom Wallet gefunden.");
                     
-                    // Verbindung herstellen
                     const response = await window.solana.connect();
                     walletAddress = response.publicKey.toString();
-                    console.log("Wallet-Adresse:", walletAddress);
+                    console.log("Wallet-Adresse erfolgreich abgerufen:", walletAddress);
 
                     walletAddressDisplay.textContent = `Wallet-Adresse: ${walletAddress}`;
-
-                    // Kontostand abrufen
                     await getBalance(walletAddress);
                 } else {
-                    alert("Phantom Wallet ist nicht installiert. Bitte installieren Sie die Erweiterung.");
-                    console.error("Phantom Wallet nicht gefunden.");
+                    alert("Phantom Wallet ist nicht installiert.");
+                    console.error("Phantom Wallet ist nicht verfügbar.");
                 }
             } catch (err) {
-                console.error("Fehler bei der Verbindung mit der Wallet:", err);
-                alert("Verbindung zur Phantom Wallet fehlgeschlagen.");
+                console.error("Fehler bei der Wallet-Verbindung:", err);
+                alert("Wallet-Verbindung fehlgeschlagen.");
             }
         });
 
         async function getBalance(address) {
             try {
                 console.log("Starte Verbindung zum Solana-Cluster...");
-                
-                // Verbindung zum Cluster herstellen
-                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
-                console.log("Verbindung erfolgreich.");
 
-                console.log("Wallet-Adresse:", address);
+                // Verbindung zum Devnet-Cluster
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
+                console.log("Verbindung erfolgreich hergestellt.");
+
+                // Wallet-Adresse validieren
+                if (!address || address.length === 0) {
+                    throw new Error("Ungültige Wallet-Adresse.");
+                }
+                console.log("Wallet-Adresse ist gültig:", address);
+
+                // Abrufen des Kontostands
+                console.log("Abrufen des Kontostands...");
                 const publicKey = new solanaWeb3.PublicKey(address);
 
-                // Netzwerkverbindung testen
-                console.log("Teste Netzwerkverbindung...");
-                await fetch('https://api.devnet.solana.com', { method: 'POST' })
-                    .then(response => {
-                        console.log("Netzwerkstatus:", response.status);
-                        if (response.ok) {
-                            console.log("Solana-Cluster erreichbar.");
-                        } else {
-                            console.error("Fehler: Solana-Cluster nicht erreichbar.");
-                        }
+                // Explizites Debugging des API-Aufrufs
+                const balance = await connection.getBalance(publicKey)
+                    .then(result => {
+                        console.log("API-Antwort erhalten:", result);
+                        return result;
                     })
-                    .catch(err => console.error("Netzwerkfehler:", err));
-
-                console.log("Abrufen des Kontostands...");
-                
-                // Kontostand abrufen
-                const balance = await connection.getBalance(publicKey);
-                console.log("Kontostand in Lamports:", balance);
+                    .catch(err => {
+                        console.error("API-Fehler:", err);
+                        throw err;
+                    });
 
                 const solBalance = balance / solanaWeb3.LAMPORTS_PER_SOL;
                 console.log("Kontostand in SOL:", solBalance);
@@ -80,7 +75,15 @@
                 balanceDisplay.textContent = `Kontostand: ${solBalance} SOL`;
             } catch (err) {
                 console.error("Fehler beim Abrufen des Kontostands:", err);
-                balanceDisplay.textContent = "Kontostand: Fehler beim Abrufen";
+
+                // Detaillierte Fehlermeldung für den Benutzer
+                if (err.message.includes("Network request failed")) {
+                    balanceDisplay.textContent = "Kontostand: Netzwerkfehler!";
+                } else if (err.message.includes("Invalid public key input")) {
+                    balanceDisplay.textContent = "Kontostand: Ungültige Wallet-Adresse!";
+                } else {
+                    balanceDisplay.textContent = "Kontostand: Fehler beim Abrufen";
+                }
             }
         }
     </script>
