@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Kontostand abrufen</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.76.0/solana-web3.min.js"></script>
+</head>
+<body>
+    <h1>Solana Kontostand abrufen</h1>
+    <button id="connectWallet">Phantom Wallet verbinden</button>
+    <p id="walletAddress">Wallet-Adresse: Noch nicht verbunden</p>
+    <p id="balance">Kontostand: --</p>
+
+    <script>
+        const connectButton = document.getElementById("connectWallet");
+        const walletAddressDisplay = document.getElementById("walletAddress");
+        const balanceDisplay = document.getElementById("balance");
+
+        let walletAddress = null;
+
+        // Verbindung zur Phantom Wallet herstellen
+        connectButton.addEventListener("click", async () => {
+            try {
+                // Überprüfen, ob Phantom Wallet vorhanden ist
+                if (window.solana && window.solana.isPhantom) {
+                    const response = await window.solana.connect();
+                    walletAddress = response.publicKey.toString();
+                    walletAddressDisplay.textContent = `Wallet-Adresse: ${walletAddress}`;
+                    getBalance(walletAddress);
+                } else {
+                    alert("Phantom Wallet ist nicht installiert. Bitte installieren Sie die Phantom Wallet-Erweiterung.");
+                }
+            } catch (err) {
+                console.error("Fehler bei der Verbindung zur Phantom Wallet:", err);
+            }
+        });
+
+        // Kontostand abrufen
+        async function getBalance(address) {
+            try {
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
+                const publicKey = new solanaWeb3.PublicKey(address);
+
+                const balance = await connection.getBalance(publicKey);
+                const solBalance = balance / solanaWeb3.LAMPORTS_PER_SOL;
+                balanceDisplay.textContent = `Kontostand: ${solBalance} SOL`;
+            } catch (err) {
+                console.error("Fehler beim Abrufen des Kontostands:", err);
+                balanceDisplay.textContent = "Kontostand: Fehler beim Abrufen";
+            }
+        }
+    </script>
+</body>
+</html>
