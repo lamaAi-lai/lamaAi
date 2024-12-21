@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lama AI (LAI) - Unified Landing Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        a {
+            color: #fff;
+        }
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 2s ease-in-out;
+        }
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        header p {
+            font-size: 1.3rem;
+            margin-top: 10px;
+        }
+        #hero {
+            background: url('f3db2121-38a6-4a2e-828e-307c57523243.webp') center/cover no-repeat;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            text-align: center;
+        }
+        #hero::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        #hero h2 {
+            font-size: 3rem;
+            z-index: 1;
+            animation: pulse 3s infinite;
+        }
+        .button {
+            padding: 15px 30px;
+            background: #ff9f1a;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0px 5px 15px rgba(255, 159, 26, 0.6);
+            transition: background 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background: #e68a00;
+            transform: translateY(-5px);
+        }
+        #about, #community, #buy-now, #christmas-special, #context-eins {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        #about h2, #community h2, #buy-now h2, #christmas-special h2, #context-eins h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        #about p, #community p, #buy-now p, #christmas-special p, #context-eins p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes sparkle {
+            0% { background-color: #ffcccc; transform: scale(1); }
+            50% { background-color: #ff0000; transform: scale(1.05); }
+            100% { background-color: #ffcccc; transform: scale(1); }
+        }
+        #christmas-special {
+            background: linear-gradient(180deg, #660000, #990000);
+            color: white;
+            padding: 60px;
+            text-align: center;
+            border-radius: 15px;
+            margin: 30px 20px;
+            animation: sparkle 3s infinite;
+            box-shadow: 0px 10px 30px rgba(255, 0, 0, 0.5);
+        }
+        #christmas-special h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
+            color: #fff;
+        }
+        #christmas-special .button {
+            background: #ff4040;
+            animation: pulse 2s infinite;
+        }
+        #christmas-special div {
+            margin-top: 30px;
+            font-size: 1.1rem;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #111;
+            color: #fff;
+        }
+        footer a {
+            color: #ff9f1a;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lama AI (LAI) - Unified Innovation</h1>
+        <p>Blazing fast, community-driven, and powered by Solana.</p>
+    </header>
+    <div id="hero">
+        <h2>Join the Meme Revolution!</h2>
+    </div>
+    <section id="about">
+        <h2>About Lama AI</h2>
+        <p>
+            Lama AI (LAI) combines cutting-edge artificial intelligence with the vibrant power of memes. Built on the Solana blockchain, LAI offers lightning-fast transactions, minimal fees, and a thriving global community. Whether you're a meme enthusiast or a blockchain believer, Lama AI is your gateway to the moon.
+        </p>
+    </section>
+    <section id="buy-now">
+        <h2>How to Get Lama AI (LAI)</h2>
+        <p>Start your journey to the moon 🚀 by trading Lama AI ($LAI) on <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank">our marketplace</a>.</p>
+        <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank" class="button">Trade $LAI Now</a>
+    </section>
+    <section id="christmas-special">
+        <h2>🎄 Christmas Special Gewinnspiel 🎁</h2>
+        <p>
+            Kaufe mindestens LAI im Wert von <strong>0.05 SOL</strong> und halte so viel wie möglich – je mehr du hältst, desto höher deine Gewinnchance! Gewinne LAI im Wert von <strong>0.5 SOL</strong>! <br> Mach mit und feiere Weihnachten auf eine besondere Weise!
+        </p>
+        <a href="https://pump.fun/coin/7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump" target="_blank" class="button">Jetzt teilnehmen</a>
+        <div>
+            <p>🎁 Gewinner werden am 31. Dezember bekannt gegeben!</p>
+            <p>✨ Viel Glück und frohe Weihnachten! 🎅</p>
+        </div>
+    </section>
+    <footer>
+        <p>© 2024 Lama AI (LAI). All Rights Reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+</body>
+</html>
