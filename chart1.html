@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LamaAI (LAI) Live Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+    canvas {
+      max-width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LamaAI (LAI) Live Price Chart</h1>
+  <p>Contract Address: <code>7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</code></p>
+  <canvas id="priceChart"></canvas>
+
+  <script>
+    const ctx = document.getElementById('priceChart').getContext('2d');
+
+    // Initialize the chart with empty data
+    const priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [], // Timestamps
+        datasets: [{
+          label: 'Price (USD)',
+          data: [], // Prices
+          borderColor: '#4caf50',
+          backgroundColor: 'rgba(76, 175, 80, 0.2)',
+          fill: true,
+          tension: 0.4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: '#ffffff'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#ffffff' },
+            grid: { color: '#555555' }
+          },
+          y: {
+            ticks: { color: '#ffffff' },
+            grid: { color: '#555555' }
+          }
+        }
+      }
+    });
+
+    // Replace this with the actual API URL
+    const API_URL = "https://api.example.com/token/price"; // Replace with the actual Solana API
+    const contractAddress = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+
+    async function fetchPrice() {
+      try {
+        const response = await fetch(`${API_URL}?contract=${contractAddress}`);
+        const data = await response.json();
+
+        // Assuming the API returns an object like { time: "10:00", price: 0.012 }
+        const time = new Date().toLocaleTimeString();
+        const price = data.price;
+
+        // Update chart data
+        priceChart.data.labels.push(time);
+        priceChart.data.datasets[0].data.push(price);
+        priceChart.update();
+      } catch (error) {
+        console.error("Error fetching price data:", error);
+      }
+    }
+
+    // Fetch data every 5 seconds
+    setInterval(fetchPrice, 5000);
+  </script>
+</body>
+</html>
