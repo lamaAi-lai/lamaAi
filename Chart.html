@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LamaAI (LAI) Live-Preisdiagramm</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+    canvas {
+      max-width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LamaAI (LAI) Live-Preisdiagramm</h1>
+  <p>Contract-Adresse: <code>7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</code></p>
+  <canvas id="priceChart"></canvas>
+
+  <script>
+    const ctx = document.getElementById('priceChart').getContext('2d');
+
+    // Initialisiere das Diagramm mit leeren Daten
+    const priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [], // Zeitstempel
+        datasets: [{
+          label: 'Preis (USD)',
+          data: [], // Preise
+          borderColor: '#4caf50',
+          backgroundColor: 'rgba(76, 175, 80, 0.2)',
+          fill: true,
+          tension: 0.4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: '#ffffff'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#ffffff' },
+            grid: { color: '#555555' }
+          },
+          y: {
+            ticks: { color: '#ffffff' },
+            grid: { color: '#555555' }
+          }
+        }
+      }
+    });
+
+    const API_URL = "https://solana-gateway.moralis.io/token/price";
+    const contractAddress = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+    const apiKey = "DEIN_MORALIS_API_KEY"; // Ersetze dies durch deinen Moralis API-Schlüssel
+
+    async function fetchPrice() {
+      try {
+        const response = await fetch(`${API_URL}?address=${contractAddress}`, {
+          headers: {
+            'accept': 'application/json',
+            'X-API-Key': apiKey
+          }
+        });
+        const data = await response.json();
+
+        // Überprüfe, ob die API einen gültigen Preis zurückgibt
+        if (data.usdPrice) {
+          const time = new Date().toLocaleTimeString();
+          const price = data.usdPrice;
+
+          // Aktualisiere die Diagrammdaten
+          priceChart.data.labels.push(time);
+          priceChart.data.datasets[0].data.push(price);
+          priceChart.update();
+        } else {
+          console.error("Ungültige Daten erhalten:", data);
+        }
+      } catch (error) {
+        console.error("Fehler beim Abrufen der Preisdaten:", error);
+      }
+    }
+
+    // Rufe die Preisdaten alle 5 Sekunden ab
+    setInterval(fetchPrice, 5000);
+  </script>
+</body>
+</html>
