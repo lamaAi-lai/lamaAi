@@ -1,22 +1,19 @@
 let resources = 100;
-let energy = 100;
+let timer = 0;
 let level = 1;
 let grid = [];
 
+// Elemente
 const resourcesDisplay = document.getElementById('resources');
-const energyDisplay = document.getElementById('energy');
+const timerDisplay = document.getElementById('timer');
 const levelDisplay = document.getElementById('level');
 const messageDisplay = document.getElementById('message');
 const gridDisplay = document.getElementById('grid');
 
-const buildFarmBtn = document.getElementById('buildFarm');
-const buildFactoryBtn = document.getElementById('buildFactory');
-const upgradeLandBtn = document.getElementById('upgradeLand');
-
 // Aktionen
-buildFarmBtn.addEventListener('click', () => buildStructure('farm', 50));
-buildFactoryBtn.addEventListener('click', () => buildStructure('factory', 100));
-upgradeLandBtn.addEventListener('click', expandLand);
+document.getElementById('buildFarm').addEventListener('click', () => buildStructure('farm', 50));
+document.getElementById('buildFactory').addEventListener('click', () => buildStructure('factory', 100));
+document.getElementById('expandLand').addEventListener('click', expandLand);
 
 // Funktionen
 function buildStructure(type, cost) {
@@ -48,11 +45,11 @@ function expandLand() {
 
 function updateUI() {
   resourcesDisplay.textContent = resources;
-  energyDisplay.textContent = energy;
+  timerDisplay.textContent = timer;
   levelDisplay.textContent = level;
 
   gridDisplay.innerHTML = '';
-  grid.forEach((cell, index) => {
+  grid.forEach((cell) => {
     const div = document.createElement('div');
     div.className = cell || '';
     gridDisplay.appendChild(div);
@@ -65,6 +62,18 @@ function showMessage(msg) {
     messageDisplay.textContent = '';
   }, 3000);
 }
+
+// Timer für Ressourcen
+setInterval(() => {
+  timer++;
+  resources += 5; // Bonus alle paar Sekunden
+  if (timer % 30 === 0) {
+    level++;
+    resources += 50; // Level-Bonus
+    showMessage('Level aufgestiegen!');
+  }
+  updateUI();
+}, 1000);
 
 // Initialisierung
 function init() {
