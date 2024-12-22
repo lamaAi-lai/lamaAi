@@ -3,43 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Futuristisches Aufbau-Spiel</title>
+  <title>Futuristisches 3D-Aufbauspiel</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="dashboard">
+  <div id="ui">
     <header>
-      <h1>🌌 Futuristisches Land: Baue dein Imperium</h1>
-      <p>Verwalte Ressourcen, erweitere dein Land und werde ein legendärer Anführer!</p>
+      <h1>🌌 Futuristisches Aufbau-Spiel</h1>
+      <div class="stats">
+        <div class="stat">
+          <h2>💎 Ressourcen</h2>
+          <p id="resources">100</p>
+        </div>
+        <div class="stat">
+          <h2>🔋 Energie</h2>
+          <p id="energy">50</p>
+        </div>
+        <div class="stat">
+          <h2>🏗️ Gebäude</h2>
+          <p id="buildings">0</p>
+        </div>
+      </div>
     </header>
-    <section class="stats">
-      <div class="stat-card">
-        <h2>🔺 Level</h2>
-        <p id="level">1</p>
-      </div>
-      <div class="stat-card">
-        <h2>💎 Ressourcen</h2>
-        <p id="resources">100</p>
-      </div>
-      <div class="stat-card">
-        <h2>⏱️ Timer</h2>
-        <p id="timer">0</p>
-      </div>
-    </section>
-    <section class="map">
-      <h2>🏙️ Dein Land</h2>
-      <div id="grid" class="grid"></div>
-    </section>
-    <section class="actions">
-      <h2>🔧 Aktionen</h2>
-      <button id="buildFarm">🏡 Farm bauen (50 Ressourcen)</button>
-      <button id="buildFactory">🏭 Fabrik bauen (100 Ressourcen)</button>
-      <button id="expandLand">🌍 Land erweitern (200 Ressourcen)</button>
-    </section>
-    <section class="message-display">
-      <p id="message"></p>
+    <section class="controls">
+      <button id="buildFarm">Farm bauen</button>
+      <button id="buildFactory">Fabrik bauen</button>
+      <button id="expandMap">Karte erweitern</button>
     </section>
   </div>
+  <div id="game-container"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
