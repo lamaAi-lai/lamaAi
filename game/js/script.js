@@ -1,84 +1,59 @@
+// Initialisierung der Szene
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('game-container').appendChild(renderer.domElement);
+
+// Licht
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5, 10, 7.5);
+scene.add(light);
+
+// Boden (Tile-Based)
+const gridSize = 10;
+const tileSize = 1;
+const tiles = [];
+
+for (let x = 0; x < gridSize; x++) {
+  for (let z = 0; z < gridSize; z++) {
+    const geometry = new THREE.BoxGeometry(tileSize, 0.1, tileSize);
+    const material = new THREE.MeshStandardMaterial({ color: 0x2f4f4f });
+    const tile = new THREE.Mesh(geometry, material);
+
+    tile.position.set(x - gridSize / 2, 0, z - gridSize / 2);
+    scene.add(tile);
+    tiles.push(tile);
+  }
+}
+
+// Kamera Position
+camera.position.set(5, 10, 10);
+camera.lookAt(0, 0, 0);
+
+// Gebäude hinzufügen
 let resources = 100;
-let timer = 0;
-let level = 1;
-let grid = [];
 
-// Elemente
-const resourcesDisplay = document.getElementById('resources');
-const timerDisplay = document.getElementById('timer');
-const levelDisplay = document.getElementById('level');
-const messageDisplay = document.getElementById('message');
-const gridDisplay = document.getElementById('grid');
+document.getElementById('buildFarm').addEventListener('click', () => {
+  if (resources >= 50) {
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+    const building = new THREE.Mesh(geometry, material);
 
-// Aktionen
-document.getElementById('buildFarm').addEventListener('click', () => buildStructure('farm', 50));
-document.getElementById('buildFactory').addEventListener('click', () => buildStructure('factory', 100));
-document.getElementById('expandLand').addEventListener('click', expandLand);
+    const randomTile = tiles[Math.floor(Math.random() * tiles.length)];
+    building.position.set(randomTile.position.x, 0.5, randomTile.position.z);
 
-// Funktionen
-function buildStructure(type, cost) {
-  if (resources >= cost) {
-    const emptySpot = grid.indexOf(null);
-    if (emptySpot !== -1) {
-      grid[emptySpot] = type;
-      resources -= cost;
-      updateUI();
-      showMessage(`${type === 'farm' ? 'Farm' : 'Fabrik'} gebaut!`);
-    } else {
-      showMessage('Kein Platz mehr verfügbar!');
-    }
-  } else {
-    showMessage('Nicht genug Ressourcen!');
+    scene.add(building);
+    resources -= 50;
+    document.getElementById('resources').textContent = resources;
   }
+});
+
+// Animation
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
 }
 
-function expandLand() {
-  if (resources >= 200) {
-    grid.push(null, null, null, null);
-    resources -= 200;
-    updateUI();
-    showMessage('Land erweitert!');
-  } else {
-    showMessage('Nicht genug Ressourcen!');
-  }
-}
-
-function updateUI() {
-  resourcesDisplay.textContent = resources;
-  timerDisplay.textContent = timer;
-  levelDisplay.textContent = level;
-
-  gridDisplay.innerHTML = '';
-  grid.forEach((cell) => {
-    const div = document.createElement('div');
-    div.className = cell || '';
-    gridDisplay.appendChild(div);
-  });
-}
-
-function showMessage(msg) {
-  messageDisplay.textContent = msg;
-  setTimeout(() => {
-    messageDisplay.textContent = '';
-  }, 3000);
-}
-
-// Timer für Ressourcen
-setInterval(() => {
-  timer++;
-  resources += 5; // Bonus alle paar Sekunden
-  if (timer % 30 === 0) {
-    level++;
-    resources += 50; // Level-Bonus
-    showMessage('Level aufgestiegen!');
-  }
-  updateUI();
-}, 1000);
-
-// Initialisierung
-function init() {
-  grid = Array(8).fill(null);
-  updateUI();
-}
-
-init();
+animate();
