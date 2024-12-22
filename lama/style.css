@@ -1,0 +1,120 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+}
+
+.lama {
+  position: relative;
+  width: 150px;
+  height: 250px;
+  background: linear-gradient(145deg, #a9a9a9, #e0e0e0);
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: move 2s ease-in-out infinite alternate;
+}
+
+.lama-head {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 100px;
+  background: linear-gradient(135deg, #a9a9a9, #d1d1d1);
+  border-radius: 50%;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.lama-ear {
+  position: absolute;
+  top: 10%;
+  width: 30px;
+  height: 50px;
+  background: #8a8a8a;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.lama-ear.left {
+  left: -15px;
+  transform: rotate(-15deg);
+}
+
+.lama-ear.right {
+  right: -15px;
+  transform: rotate(15deg);
+}
+
+.lama-eye {
+  position: absolute;
+  top: 30%;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.lama-eye.left {
+  left: 10px;
+}
+
+.lama-eye.right {
+  right: 10px;
+}
+
+.lama-nose {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 20px;
+  background: #333;
+  border-radius: 50%;
+}
+
+.lama-body {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(145deg, #8a8a8a, #a9a9a9);
+  border-radius: 50%;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tech-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://via.placeholder.com/500x500/00ffcc/ffffff?text=Futuristic+Tech') no-repeat center center;
+  background-size: cover;
+  opacity: 0.5;
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(20px);
+  }
+}
