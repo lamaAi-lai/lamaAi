@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futuristisches Lama AI Aufbau Spiel</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <header>
+      <h1>Dein Futuristisches Land</h1>
+      <p>Baue, verbessere und verwalte deine Ressourcen!</p>
+    </header>
+    <section class="stats">
+      <div class="stat-card">
+        <h2>🔺 Level</h2>
+        <p id="level">1</p>
+      </div>
+      <div class="stat-card">
+        <h2>💎 Ressourcen</h2>
+        <p id="resources">100</p>
+      </div>
+      <div class="stat-card">
+        <h2>⚡ Energie</h2>
+        <p id="energy">100</p>
+      </div>
+    </section>
+    <section class="map">
+      <h2>Dein Land</h2>
+      <div id="grid" class="grid"></div>
+    </section>
+    <section class="actions">
+      <h2>Aktionen</h2>
+      <button id="buildFarm">🏡 Farm bauen (50 Ressourcen)</button>
+      <button id="buildFactory">🏭 Fabrik bauen (100 Ressourcen)</button>
+      <button id="upgradeLand">⬆️ Land erweitern (200 Ressourcen)</button>
+    </section>
+    <section class="message-display">
+      <p id="message"></p>
+    </section>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+</html>
