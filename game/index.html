@@ -1,44 +1,32 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Futuristisches 3D-Aufbauspiel</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristisches Insel-Aufbauspiel</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div id="ui">
-    <header>
-      <h1>🌌 Futuristisches Aufbau-Spiel</h1>
-      <div class="stats">
-        <div class="stat">
-          <h2>💎 Ressourcen</h2>
-          <p id="resources">100</p>
+    <div id="game-container">
+        <!-- 3D Canvas für das Spiel -->
+    </div>
+    
+    <div id="sidebar">
+        <div id="resources-info">
+            <p><strong>Ressourcen:</strong> <span id="resources">100</span></p>
+            <p><strong>Level:</strong> <span id="level">1</span></p>
+            <p><strong>Gebäude:</strong> <span id="buildings">0</span></p>
         </div>
-        <div class="stat">
-          <h2>🔋 Energie</h2>
-          <p id="energy">50</p>
+
+        <div id="controls">
+            <button id="buildFarm">Bau Farm (50 Ressourcen)</button>
+            <button id="buildFactory">Bau Fabrik (100 Ressourcen)</button>
+            <button id="buildLama">Bau Lama (200 Ressourcen)</button>
+            <button id="expandMap">Erweitere Karte</button>
         </div>
-        <div class="stat">
-          <h2>🏗️ Gebäude</h2>
-          <p id="buildings">0</p>
-        </div>
-        <div class="stat">
-          <h2>🎮 Level</h2>
-          <p id="level">1</p>
-        </div>
-      </div>
-    </header>
-    <section class="controls">
-      <button id="buildFarm">Farm bauen</button>
-      <button id="buildFactory">Fabrik bauen</button>
-      <button id="buildLama">Lama bauen</button>
-      <button id="expandMap">Karte erweitern</button>
-      <button id="collectBonus">Bonus einsammeln</button>
-    </section>
-  </div>
-  <div id="game-container"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
-  <script src="js/script.js"></script>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/build/three.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
