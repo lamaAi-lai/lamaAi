@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solana Crypto Dashboard</title>
     <style>
-        /* Grundlegende Styles für das Layout */
+        /* Grundlegende Styles */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -19,66 +19,83 @@
             min-height: 100vh;
             overflow: hidden;
         }
+
         h1 {
-            font-size: 30px;
-            margin-bottom: 20px;
+            font-size: 32px;
+            margin-bottom: 40px;
             text-align: center;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 1.2s ease-in-out;
+            color: #00ff00;
         }
+
         #wallet-container {
             background: linear-gradient(135deg, #6a5acd, #8a2be2);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-            max-width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.8);
+            max-width: 600px;
             width: 100%;
             text-align: center;
-            margin-top: 50px;
+            margin-top: 20px;
             animation: slideIn 1.5s ease-in-out;
         }
+
         #connect-wallet {
             background-color: #ff6347;
-            padding: 15px 30px;
+            padding: 20px 40px;
             font-size: 18px;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-bottom: 20px;
         }
+
         #connect-wallet:hover {
             background-color: #ff4500;
         }
+
         p {
             font-size: 20px;
-            margin: 10px 0;
+            margin: 15px 0;
             font-weight: bold;
         }
+
+        .price-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .price-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #00ff00;
+            margin: 10px;
+            width: 150px;
+            animation: pulse 2s infinite;
+        }
+
         #wallet-address {
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             margin-top: 20px;
             font-size: 14px;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
-        }
-        #wallet-address span {
+            max-width: 100%;
             word-wrap: break-word;
         }
-        .price {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-size: 22px;
-            color: #00ff00;
-            font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-        .error {
-            color: #ff0000;
+
+        .contract-address {
+            display: none;
         }
 
         /* Animationen */
@@ -98,6 +115,27 @@
             100% { transform: scale(1); opacity: 0.8; }
         }
 
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 26px;
+            }
+
+            #wallet-container {
+                padding: 20px;
+            }
+
+            .price-box {
+                font-size: 18px;
+                width: 120px;
+            }
+
+            #connect-wallet {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
@@ -107,13 +145,17 @@
     <div id="wallet-container">
         <button id="connect-wallet">Mit Wallet verbinden</button>
         <p>Aktueller Solana Preis: <span id="sol-price">Laden...</span> USD</p>
-        <p>Token Preis (Contract: 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump): <span id="token-price">Laden...</span> USD</p>
+        <div class="price-container">
+            <div class="price-box">Token Preis: <span id="token-price">Laden...</span> USD</div>
+        </div>
         <div id="wallet-address" style="display:none;"></div>
+        <div id="contract-address" class="contract-address">Contract Adresse: 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</div>
     </div>
 
     <script>
         const solana = window.solana; // Phantom Wallet Injection
         const walletAddressElement = document.getElementById('wallet-address');
+        const contractAddressElement = document.getElementById('contract-address');
 
         // Verbindung mit Phantom Wallet herstellen
         document.getElementById('connect-wallet').addEventListener('click', async () => {
@@ -127,6 +169,7 @@
                     alert(`Wallet verbunden: ${walletAddress}`);
                 } catch (err) {
                     console.error('Fehler beim Verbinden mit dem Wallet:', err);
+                    alert('Fehler beim Verbinden mit dem Wallet. Stelle sicher, dass Phantom installiert ist.');
                 }
             } else {
                 alert('Bitte installiere das Phantom Wallet!');
