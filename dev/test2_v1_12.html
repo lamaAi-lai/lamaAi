@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Crypto Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1c;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #00ff00;
+        }
+        #wallet-container {
+            background: linear-gradient(135deg, #6a5acd, #8a2be2);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.8);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            transition: transform 0.5s ease;
+        }
+        #connect-wallet {
+            background-color: #ff6347;
+            padding: 20px 40px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+        #connect-wallet:hover {
+            background-color: #ff4500;
+        }
+        p {
+            font-size: 20px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .price-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .price-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #00ff00;
+            margin: 10px;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+        }
+        .price-box:hover {
+            transform: scale(1.05);
+        }
+        #wallet-address {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            color: white;
+            word-wrap: break-word;
+        }
+        #wallet-address span {
+            font-weight: bold;
+        }
+        #error-message {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #ff0000;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            color: white;
+            display: none;
+            word-wrap: break-word;
+        }
+        .loading {
+            color: yellow;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        /* Countdown Kreis */
+        .countdown-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 10px solid #333;
+            margin-top: 30px;
+        }
+        .countdown-circle .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#00ff00 0% 0%, transparent 0% 100%);
+            animation: countdownAnimation 15s linear infinite;
+        }
+        .countdown-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+        @keyframes countdownAnimation {
+            0% { background: conic-gradient(#00ff00 0% 0%, transparent 0% 100%); }
+            100% { background: conic-gradient(#00ff00 100% 100%, transparent 0% 100%); }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+</head>
+<body>
+    <h1>Solana Crypto Dashboard</h1>
+    <div id="wallet-container">
+        <button id="connect-wallet">Mit Wallet verbinden</button>
+        <p>Aktueller Solana Preis: <span id="sol-price">Laden...</span> USD</p>
+        <div class="price-container">
+            <div class="price-box">Token Preis: <span id="token-price">Laden...</span> USD</div>
+            <div class="price-box">LAI Coins auf Adresse: <span id="lai-balance">Laden...</span></div>
+        </div>
+    </div>
+    
+    <!-- Fixierte Wallet-Adresse oben mittig -->
+    <div id="wallet-address" style="display:none;">
+        Wallet Adresse: <span id="wallet-address-display">Laden...</span>
+    </div>
+
+    <!-- Fehlernachricht -->
+    <div id="error-message">
+        Fehler bei der Verbindung zur Wallet! Bitte stelle sicher, dass Phantom installiert ist.
+    </div>
+
+    <!-- Countdown Kreis -->
+    <div class="countdown-circle">
+        <div class="circle"></div>
+        <div class="countdown-text" id="countdown-text">15s</div>
+    </div>
+
+    <script>
+        const solana = window.solana; // Phantom Wallet Injection
+        const walletAddressElement = document.getElementById('wallet-address-display');
+        const errorMessageElement = document.getElementById('error-message');
+        const tokenAddress = '7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump'; // Vertrag Adresse
+        const solPriceElement = document.getElementById('sol-price');
+        const tokenPriceElement = document.getElementById('token-price');
+        const laiBalanceElement = document.getElementById('lai-balance');
+        const countdownTextElement = document.getElementById('countdown-text');
+        let countdownInterval;
+
+        // Verbindung mit Phantom Wallet herstellen
+        document.getElementById('connect-wallet').addEventListener('click', async () => {
+            if (solana && solana.isPhantom) {
+                try {
+                    const response = await solana.connect();
+                    const walletAddress = response.publicKey.toString();
+                    displayWalletAddress(walletAddress);  // Funktion zum Anzeigen der Wallet-Adresse
+                    alert(`Wallet verbunden: ${walletAddress}`);
+                    fetchLaiBalance(walletAddress); // Abruf von LAI Balance
+                } catch (err) {
+                    console.error('Fehler beim Verbinden mit dem Wallet:', err);
+                    displayError('Fehler bei der Verbindung zur Wallet! Bitte stelle sicher, dass Phantom installiert ist.');
+                }
+            } else {
+                displayError('Bitte installiere das Phantom Wallet!');
+            }
+        });
+
+        // Funktion zum Anzeigen der verkürzten Wallet-Adresse oben mittig
+        function displayWalletAddress(walletAddress) {
+            const shortenedAddress = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-6);
+            walletAddressElement.innerText = shortenedAddress;
+            document.getElementById('wallet-address').style.display = 'block';
+            errorMessageElement.style.display = 'none';  // Fehlernachricht ausblenden, wenn Verbindung erfolgreich
+        }
+
+        // Funktion zur Anzeige der Fehlernachricht oben rechts
+        function displayError(message) {
+            errorMessageElement.innerText = message;
+            errorMessageElement.style.display = 'block';
+            document.getElementById('wallet-address').style.display = 'none';  // Wallet-Adresse ausblenden bei Fehler
+        }
+
+        // Solana Preis abrufen (CoinGecko API)
+        async function fetchSolanaPrice() {
+            try {
+                solPriceElement.innerHTML = '<span class="loading">Lade...</span>';
+                const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+                if (response.data.solana) {
+                    const solPrice = response.data.solana.usd;
+                    solPriceElement.innerText = solPrice.toFixed(2);
+                } else {
+                    solPriceElement.innerText = 'Fehler';
+                }
+            } catch (error) {
+                solPriceElement.innerText = 'Fehler';
+            }
+        }
+
+        // LAI Token Balance abrufen
+        async function fetchLaiBalance(walletAddress) {
+            try {
+                laiBalanceElement.innerHTML = '<span class="loading">Lade...</span>';
+                const connection = new solana.Web3.Connection(solana.clusterApiUrl('mainnet-beta'), 'confirmed');
+                const tokenMintAddress = new solana.PublicKey(tokenAddress);
+                const walletPubKey = new solana.PublicKey(walletAddress);
+                
+                const tokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPubKey, {
+                    mint: tokenMintAddress
+                });
+
+                let laiBalance = 0;
+                tokenAccounts.value.forEach((account) => {
+                    laiBalance += account.account.data.parsed.info.tokenAmount.uiAmount;
+                });
+
+                laiBalanceElement.innerText = laiBalance.toFixed(2);
+            } catch (error) {
+                laiBalanceElement.innerText = 'Fehler';
+            }
+        }
+
+        // Token Preis abrufen
+        async function fetchTokenPrice() {
+            try {
+                tokenPriceElement.innerHTML = '<span class="loading">Lade...</span>';
+                const response = await axios.get(`https://api.pump.fun/v1/token/${tokenAddress}`);
+                if (response.data.data && response.data.data.price_usd) {
+                    const tokenPrice = response.data.data.price_usd;
+                    tokenPriceElement.innerText = tokenPrice.toFixed(2);
+                } else {
+                    tokenPriceElement.innerText = 'Fehler';
+                }
+            } catch (error) {
+                tokenPriceElement.innerText = 'Fehler';
+            }
+        }
+
+        // Timer für die Aktualisierung anzeigen
+        let countdown = 15; // Startzeit in Sekunden
+        function updateCountdown() {
+            countdownTextElement.innerText = `${countdown}s`;
+            if (countdown === 0) {
+                countdown = 15;
+                fetchSolanaPrice();
+                fetchTokenPrice();
+                fetchLaiBalance(walletAddressElement.innerText);
+            }
+            countdown--;
+        }
+
+        // Initiale Daten abrufen
+        fetchSolanaPrice();
+        fetchTokenPrice();
+
+        // Countdown Intervall alle 1 Sekunde
+        setInterval(updateCountdown, 1000);
+
+        // Alle 15 Sekunden erneute Abfrage
+        setInterval(() => {
+            fetchSolanaPrice();
+            fetchTokenPrice();
+            fetchLaiBalance(walletAddressElement.innerText);
+        }, 15000);
+    </script>
+</body>
+</html>
