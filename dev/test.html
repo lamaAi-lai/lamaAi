@@ -2,46 +2,114 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Solana Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Crypto Dashboard</title>
     <style>
+        /* Grundlegende Styles für das Layout */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
-        }
-        #wallet-address {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        #connect-wallet {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+            padding: 0;
+            background: #1c1c1c;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
         h1 {
-            font-size: 24px;
+            font-size: 30px;
             margin-bottom: 20px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        #wallet-container {
+            background: linear-gradient(135deg, #6a5acd, #8a2be2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+            animation: slideIn 1.5s ease-in-out;
+        }
+        #connect-wallet {
+            background-color: #ff6347;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #connect-wallet:hover {
+            background-color: #ff4500;
         }
         p {
-            font-size: 18px;
+            font-size: 20px;
+            margin: 10px 0;
+            font-weight: bold;
         }
+        #wallet-address {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        #wallet-address span {
+            word-wrap: break-word;
+        }
+        .price {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 22px;
+            color: #00ff00;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        .error {
+            color: #ff0000;
+        }
+
+        /* Animationen */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
 </head>
 <body>
-    <h1>Solana Preis Dashboard</h1>
-    <button id="connect-wallet">Mit Wallet verbinden</button>
-    <p>Aktueller Solana Preis: <span id="sol-price">Laden...</span> USD</p>
-    <p>Token Preis (Contract: 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump): <span id="token-price">Laden...</span> USD</p>
-
-    <div id="wallet-address" style="display:none;"></div>
+    <h1>Solana Crypto Dashboard</h1>
+    <div id="wallet-container">
+        <button id="connect-wallet">Mit Wallet verbinden</button>
+        <p>Aktueller Solana Preis: <span id="sol-price">Laden...</span> USD</p>
+        <p>Token Preis (Contract: 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump): <span id="token-price">Laden...</span> USD</p>
+        <div id="wallet-address" style="display:none;"></div>
+    </div>
 
     <script>
         const solana = window.solana; // Phantom Wallet Injection
