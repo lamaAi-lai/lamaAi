@@ -84,8 +84,9 @@
             const tokenAddress = '7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump';
             try {
                 const response = await axios.get(
-                    `https://api.pump.fun/v1/tokens/${tokenAddress}`
+                    `https://api.pump.fun/v1/token/${tokenAddress}`
                 );
+                // Beispiel, je nachdem wie die Antwort von pump.fun aussieht
                 const tokenPrice = response.data.data.price_usd || 'N/A'; // Preis in USD
                 document.getElementById('token-price').innerText = tokenPrice.toFixed(2);
             } catch (error) {
