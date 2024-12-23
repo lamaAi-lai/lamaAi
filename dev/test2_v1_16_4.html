@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        #wallet-status {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #444;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        #wallet-status.connected {
+            background-color: #28a745;
+        }
+        #wallet-status.error {
+            background-color: #dc3545;
+        }
+        #main-container {
+            text-align: center;
+            background-color: #1f1f1f;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        #connect-wallet {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #connect-wallet:hover {
+            background-color: #0056b3;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
+</head>
+<body>
+    <div id="wallet-status" class="error">Nicht verbunden</div>
+    <div id="main-container">
+        <h1>Solana Dashboard</h1>
+        <button id="connect-wallet">Mit Wallet verbinden</button>
+        <p>LAI Coins auf Adresse: <span id="lai-balance">Laden...</span></p>
+    </div>
+
+    <script>
+        const walletStatusElement = document.getElementById("wallet-status");
+        const laiBalanceElement = document.getElementById("lai-balance");
+        const connectWalletButton = document.getElementById("connect-wallet");
+
+        // Contract-Adresse des Tokens
+        const tokenMintAddress = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+
+        let walletAddress = null;
+
+        // Wallet verbinden
+        async function connectWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const response = await window.solana.connect();
+                    walletAddress = response.publicKey.toString();
+                    walletStatusElement.className = "connected";
+                    walletStatusElement.innerText = `Verbunden: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-6)}`;
+                    fetchLaiBalance();
+                } catch (error) {
+                    console.error("Fehler beim Verbinden:", error);
+                    walletStatusElement.className = "error";
+                    walletStatusElement.innerText = "Verbindung fehlgeschlagen";
+                }
+            } else {
+                alert("Phantom Wallet nicht gefunden! Bitte installieren.");
+            }
+        }
+
+        // Balance der LAI-Token abrufen
+        async function fetchLaiBalance() {
+            try {
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"), "confirmed");
+                const tokenMintPubKey = new solanaWeb3.PublicKey(tokenMintAddress);
+                const walletPubKey = new solanaWeb3.PublicKey(walletAddress);
+
+                // Abrufen der Token-Konten
+                const tokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPubKey, {
+                    mint: tokenMintPubKey
+                });
+
+                // Token-Balance berechnen
+                let balance = 0;
+                tokenAccounts.value.forEach(account => {
+                    const amount = account.account.data.parsed.info.tokenAmount.uiAmount;
+                    balance += amount || 0;
+                });
+
+                if (balance > 0) {
+                    laiBalanceElement.innerText = balance.toFixed(2);
+                } else {
+                    laiBalanceElement.innerText = "Keine Token gefunden";
+                }
+            } catch (error) {
+                console.error("Fehler beim Abrufen der LAI-Balance:", error);
+                laiBalanceElement.innerText = "Fehler";
+            }
+        }
+
+        // Button-Ereignislistener
+        connectWalletButton.addEventListener("click", connectWallet);
+
+        // Intervall für die Abfrage (15 Sekunden)
+        setInterval(() => {
+            if (walletAddress) {
+                fetchLaiBalance();
+            }
+        }, 15000);
+    </script>
+</body>
+</html>
