@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Solana Preis Dashboard</title>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-wallets@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-base@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react@latest/lib/index.iife.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react-ui@latest/lib/index.iife.min.js"></script>
+</head>
+<body>
+    <h1>Solana Preis Dashboard</h1>
+    <button id="connect-button">Mit Wallet verbinden</button>
+    <p>Aktueller Solana Preis: <span id="sol-price">Laden...</span> USD</p>
+    <p>Token Preis (7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump): <span id="token-price">Laden...</span> USD</p>
+
+    <script>
+        const solanaWeb3 = solanaWeb3;
+        const { PhantomWalletAdapter } = solanaWalletAdapterWallets;
+        const { WalletProvider } = solanaWalletAdapterReact;
+        const { WalletModalProvider, WalletMultiButton } = solanaWalletAdapterReactUi;
+
+        const wallet = new PhantomWalletAdapter();
+
+        document.getElementById('connect-button').addEventListener('click', async () => {
+            try {
+                await wallet.connect();
+                console.log('Wallet verbunden:', wallet.publicKey.toString());
+            } catch (err) {
+                console.error('Fehler beim Verbinden des Wallets:', err);
+            }
+        });
+
+        async function fetchSolPrice() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+                const data = await response.json();
+                document.getElementById('sol-price').innerText = data.solana.usd.toFixed(2);
+            } catch (err) {
+                console.error('Fehler beim Abrufen des Solana-Preises:', err);
+            }
+        }
+
+        async function fetchTokenPrice() {
+            try {
+                const response = await fetch('https://pro-api.solscan.io/v2.0/token/price?tokenAddress=7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump');
+                const data = await response.json();
+                document.getElementById('token-price').innerText = data.price.usd.toFixed(2);
+            } catch (err) {
+                console.error('Fehler beim Abrufen des Token-Preises:', err);
+            }
+        }
+
+        function updatePrices() {
+            fetchSolPrice();
+            fetchTokenPrice();
+        }
+
+        setInterval(updatePrices, 5000);
+        updatePrices();
+    </script>
+</body>
+</html>
