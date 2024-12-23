@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Crypto Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            border-radius: 12px;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #ff9f00;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            background-color: #ff6347;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 30px;
+        }
+
+        .btn:hover {
+            background-color: #ff4500;
+        }
+
+        .wallet-info, .price-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            font-size: 18px;
+            color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .price-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            width: 250px;
+            font-size: 20px;
+            margin: 10px;
+            color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        .price-box:hover {
+            transform: scale(1.05);
+        }
+
+        .address {
+            font-size: 16px;
+            color: #bbb;
+            word-wrap: break-word;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ff9f00;
+            text-decoration: none;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Solana Crypto Dashboard</h1>
+        <button class="btn" id="connect-wallet">Mit Wallet verbinden</button>
+        <div class="wallet-info" id="wallet-info" style="display:none;">
+            <div id="wallet-address">Wallet Adresse: -</div>
+        </div>
+        <div class="price-info">
+            <div class="price-box">Solana Preis: <span id="sol-price">Laden...</span> USD</div>
+            <div class="price-box">Token Preis (LAI): <span id="token-price">Laden...</span> USD</div>
+            <div class="price-box">LAI Coins auf Adresse: <span id="lai-balance">Laden...</span></div>
+        </div>
+        <div class="footer">
+            <p>Contract Adresse: <span id="contract-address">7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</span></p>
+            <p>Powered by <a href="https://www.solana.com" target="_blank">Solana</a></p>
+        </div>
+    </div>
+
+    <script>
+        const solana = window.solana; // Phantom Wallet Injection
+        const contractAddress = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+        const tokenAddress = new solana.PublicKey(contractAddress);
+        const walletInfoElement = document.getElementById('wallet-info');
+        const walletAddressElement = document.getElementById('wallet-address');
+
+        // Verbindung mit Phantom Wallet herstellen
+        document.getElementById('connect-wallet').addEventListener('click', async () => {
+            if (solana && solana.isPhantom) {
+                try {
+                    const response = await solana.connect();
+                    const walletAddress = response.publicKey.toString();
+                    walletAddressElement.innerText = `Wallet Adresse: ${walletAddress}`;
+                    walletInfoElement.style.display = 'block'; // Zeige die Wallet-Adresse an
+                    alert(`Wallet verbunden: ${walletAddress}`);
+                    fetchLaiBalance(walletAddress);
+                } catch (err) {
+                    console.error('Fehler beim Verbinden mit dem Wallet:', err);
+                    alert('Fehler beim Verbinden mit dem Wallet. Stelle sicher, dass Phantom installiert ist.');
+                }
+            } else {
+                alert('Bitte installiere das Phantom Wallet!');
+            }
+        });
+
+        // Solana Preis abrufen (CoinGecko API)
+        async function fetchSolanaPrice() {
+            try {
+                const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+                if (response.data.solana) {
+                    const solPrice = response.data.solana.usd;
+                    document.getElementById('sol-price').innerText = solPrice.toFixed(2);
+                } else {
+                    throw new Error('Solana Preis nicht gefunden');
+                }
+            } catch (error) {
+                console.error('Fehler beim Abrufen des Solana-Preises:', error);
+                document.getElementById('sol-price').innerText = 'Fehler';
+            }
+        }
+
+        // LAI Token Balance abrufen
+        async function fetchLaiBalance(walletAddress) {
+            try {
+                const connection = new solana.Web3.Connection(solana.clusterApiUrl('mainnet-beta'), 'confirmed');
+                const walletPubKey = new solana.PublicKey(walletAddress);
+
+                // Token Account abrufen
+                const tokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPubKey, {
+                    mint: tokenAddress
+                });
+
+                let laiBalance = 0;
+                tokenAccounts.value.forEach((account) => {
+                    laiBalance += account.account.data.parsed.info.tokenAmount.uiAmount;
+                });
+
+                document.getElementById('lai-balance').innerText = laiBalance;
+            } catch (error) {
+                console.error('Fehler beim Abrufen der LAI-Balance:', error);
+                document.getElementById('lai-balance').innerText = 'Fehler';
+            }
+        }
+
+        // Token Preis (LAI) berechnen (aktuell als Beispiel der Solana Preis)
+        async function fetchTokenPrice() {
+            try {
+                const solPrice = await getSolanaPrice();
+                const tokenPrice = solPrice * 0.5; // Beispielhafte Berechnung, dass 1 LAI = 0.5 SOL
+                document.getElementById('token-price').innerText = tokenPrice.toFixed(2);
+            } catch (error) {
+                console.error('Fehler beim Abrufen des Token-Preises:', error);
+                document.getElementById('token-price').innerText = 'Fehler';
+            }
+        }
+
+        // Hilfsfunktion: Solana Preis abrufen
+        async function getSolanaPrice() {
+            const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+            return response.data.solana.usd;
+        }
+
+        // Initiale Daten laden
+        fetchSolanaPrice();
+        fetchTokenPrice();
+
+        setInterval(() => {
+            fetchSolanaPrice();
+            fetchTokenPrice();
+        }, 5000); // Alle 5 Sekunden die Preise aktualisieren
+    </script>
+</body>
+</html>
