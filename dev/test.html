@@ -94,6 +94,15 @@
             word-wrap: break-word;
         }
 
+        .contract-details {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #00ff00;
+        }
+
         .contract-address {
             display: none;
         }
@@ -135,7 +144,6 @@
                 font-size: 16px;
             }
         }
-
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
@@ -147,16 +155,24 @@
         <p>Aktueller Solana Preis: <span id="sol-price">Laden...</span> USD</p>
         <div class="price-container">
             <div class="price-box">Token Preis: <span id="token-price">Laden...</span> USD</div>
+            <div class="price-box">LAI Menge: <span id="lai-amount">Laden...</span></div>
         </div>
         <div id="wallet-address" style="display:none;"></div>
         <div id="contract-address" class="contract-address">Contract Adresse: 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</div>
+        <div class="contract-details" id="contract-details">
+            <p><strong>Contract-Adresse:</strong> 7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump</p>
+            <p><strong>Token-Supply:</strong> Laden...</p>
+            <p><strong>Token-Name:</strong> LamaAi</p>
+            <p><strong>Token-Symbol:</strong> LAI</p>
+        </div>
     </div>
 
     <script>
         const solana = window.solana; // Phantom Wallet Injection
         const walletAddressElement = document.getElementById('wallet-address');
-        const contractAddressElement = document.getElementById('contract-address');
-
+        const contractDetailsElement = document.getElementById('contract-details');
+        const laiAmountElement = document.getElementById('lai-amount');
+        
         // Verbindung mit Phantom Wallet herstellen
         document.getElementById('connect-wallet').addEventListener('click', async () => {
             if (solana && solana.isPhantom) {
@@ -213,14 +229,9 @@
             }
         }
 
-        // Daten alle 5 Sekunden aktualisieren
-        function updatePrices() {
-            fetchSolanaPrice();
-            fetchTokenPrice();
-        }
-
-        setInterval(updatePrices, 5000); // Alle 5 Sekunden
-        updatePrices(); // Direkt beim Laden
-    </script>
-</body>
-</html>
+        // LAI Menge auf Wallet anzeigen
+        async function fetchLaiAmount(walletAddress) {
+            const tokenMintAddress = '7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump';
+            try {
+                const connection = new solana.Connection(solana.clusterApiUrl(), 'confirmed');
+                const tokenAccounts = await connection.getTokenAccountsByOwner(
