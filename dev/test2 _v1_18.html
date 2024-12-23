@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #00ff00;
+        }
+
+        #wallet-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #contract-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+        }
+
+        #contract-address {
+            color: #00ff00;
+            margin-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        #copy-button {
+            background-color: #00ff00;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            color: #121212;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        #copy-button:hover {
+            background-color: #00cc00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Solana Dashboard</h1>
+    <div id="wallet-info">
+        <!-- Wallet Information will be shown here -->
+        <p id="wallet-address">Wallet-Adresse: Nicht verbunden</p>
+    </div>
+
+    <!-- Contract Address Container -->
+    <div id="contract-container">
+        <span id="contract-address">7Myas...pump</span>
+        <button id="copy-button">Kopieren</button>
+    </div>
+
+    <script>
+        // Contract Address
+        const contractAddress = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+
+        // Set Contract Address in UI
+        document.getElementById("contract-address").innerText =
+            contractAddress.slice(0, 5) + "..." + contractAddress.slice(-5);
+
+        // Copy Button Functionality
+        document.getElementById("copy-button").addEventListener("click", () => {
+            navigator.clipboard.writeText(contractAddress)
+                .then(() => alert("Contract-Adresse kopiert!"))
+                .catch(err => alert("Fehler beim Kopieren der Adresse."));
+        });
+    </script>
+</body>
+</html>
