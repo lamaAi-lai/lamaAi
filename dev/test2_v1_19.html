@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #00ff00;
+        }
+
+        #wallet-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #contract-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+        }
+
+        #contract-address {
+            color: #00ff00;
+            margin-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        #copy-button {
+            background-color: #00ff00;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            color: #121212;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        #copy-button:hover {
+            background-color: #00cc00;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
+</head>
+<body>
+    <h1>Solana Dashboard</h1>
+    <div id="wallet-info">
+        <button id="connect-wallet">Mit Wallet verbinden</button>
+        <p id="wallet-address">Wallet-Adresse: Nicht verbunden</p>
+        <p id="lai-balance">LAI Coins auf Adresse: Nicht verfügbar</p>
+        <p id="error-message" style="display: none;">Fehler: Wallet-Verbindung nicht möglich</p>
+    </div>
+
+    <!-- Contract Address Container -->
+    <div id="contract-container">
+        <span id="contract-address">7Myas...pump</span>
+        <button id="copy-button">Kopieren</button>
+    </div>
+
+    <script>
+        const tokenAddress = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+        const walletButton = document.getElementById("connect-wallet");
+        const walletAddressElement = document.getElementById("wallet-address");
+        const laiBalanceElement = document.getElementById("lai-balance");
+        const errorMessageElement = document.getElementById("error-message");
+
+        // Contract Address Display
+        document.getElementById("contract-address").innerText =
+            tokenAddress.slice(0, 5) + "..." + tokenAddress.slice(-5);
+
+        // Copy Contract Address
+        document.getElementById("copy-button").addEventListener("click", () => {
+            navigator.clipboard.writeText(tokenAddress)
+                .then(() => alert("Contract-Adresse kopiert!"))
+                .catch(err => alert("Fehler beim Kopieren der Adresse."));
+        });
+
+        // Connect Wallet
+        walletButton.addEventListener("click", async () => {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const response = await window.solana.connect();
+                    const walletAddress = response.publicKey.toString();
+
+                    walletAddressElement.innerText = `Wallet-Adresse: ${walletAddress}`;
+                    errorMessageElement.style.display = "none";
+
+                    // Fetch Token Balance
+                    fetchTokenBalance(walletAddress);
+                } catch (err) {
+                    console.error("Wallet-Verbindung fehlgeschlagen:", err);
+                    errorMessageElement.innerText = "Fehler: Verbindung zur Wallet fehlgeschlagen";
+                    errorMessageElement.style.display = "block";
+                }
+            } else {
+                alert("Bitte installiere das Phantom Wallet, um fortzufahren.");
+            }
+        });
+
+        // Fetch Token Balance
+        async function fetchTokenBalance(walletAddress) {
+            try {
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"), "confirmed");
+                const walletPubKey = new solanaWeb3.PublicKey(walletAddress);
+                const tokenMintAddress = new solanaWeb3.PublicKey(tokenAddress);
+
+                // Get Token Accounts
+                const tokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPubKey, {
+                    mint: tokenMintAddress
+                });
+
+                let balance = 0;
+                tokenAccounts.value.forEach(account => {
+                    balance += account.account.data.parsed.info.tokenAmount.uiAmount;
+                });
+
+                laiBalanceElement.innerText = `LAI Coins auf Adresse: ${balance}`;
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Token-Balance:", error);
+                laiBalanceElement.innerText = "LAI Coins auf Adresse: Fehler";
+            }
+        }
+    </script>
+</body>
+</html>
