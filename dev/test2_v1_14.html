@@ -215,7 +215,7 @@
                 console.log(response.data); // Debugging: Überprüfen der API-Antwort
                 if (response.data.solana) {
                     const solPrice = response.data.solana.usd;
-                    solPriceElement.innerText = solPrice.toFixed(2);
+                    solPriceElement.innerText = solPrice.toFixed(4);
                 } else {
                     solPriceElement.innerText = 'Fehler';
                     console.error('Solana Preis konnte nicht abgerufen werden');
