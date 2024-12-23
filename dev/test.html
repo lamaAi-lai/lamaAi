@@ -182,8 +182,12 @@
                 const response = await axios.get(
                     'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'
                 );
-                const solPrice = response.data.solana.usd;
-                document.getElementById('sol-price').innerText = solPrice.toFixed(2);
+                if (response.data.solana) {
+                    const solPrice = response.data.solana.usd;
+                    document.getElementById('sol-price').innerText = solPrice.toFixed(2);
+                } else {
+                    throw new Error('Solana Preis nicht gefunden');
+                }
             } catch (error) {
                 console.error('Fehler beim Abrufen des Solana-Preises:', error);
                 document.getElementById('sol-price').innerText = 'Fehler';
@@ -197,9 +201,12 @@
                 const response = await axios.get(
                     `https://api.pump.fun/v1/token/${tokenAddress}`
                 );
-                // Beispiel, je nachdem wie die Antwort von pump.fun aussieht
-                const tokenPrice = response.data.data.price_usd || 'N/A'; // Preis in USD
-                document.getElementById('token-price').innerText = tokenPrice.toFixed(2);
+                if (response.data.data && response.data.data.price_usd) {
+                    const tokenPrice = response.data.data.price_usd;
+                    document.getElementById('token-price').innerText = tokenPrice.toFixed(2);
+                } else {
+                    throw new Error('Token Preis nicht gefunden');
+                }
             } catch (error) {
                 console.error('Fehler beim Abrufen des Token-Preises:', error);
                 document.getElementById('token-price').innerText = 'Fehler';
