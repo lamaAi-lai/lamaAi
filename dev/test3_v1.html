@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Wallet Verbindung</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.83.0/solana-web3.min.js"></script>
+</head>
+<body>
+    <h1>Verbinde deine Phantom Wallet</h1>
+    <button id="connect-wallet">Verbinden</button>
+    <p id="wallet-address">Wallet-Adresse: Noch nicht verbunden</p>
+    <p id="lai-balance">LAI Balance: Noch nicht abgefragt</p>
+
+    <script>
+        const LAI_TOKEN_MINT = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+
+        document.getElementById("connect-wallet").addEventListener("click", async () => {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    // Verbindung zur Phantom Wallet herstellen
+                    const response = await window.solana.connect();
+                    const walletAddress = response.publicKey.toString();
+                    document.getElementById("wallet-address").textContent = `Wallet-Adresse: ${walletAddress}`;
+
+                    // Verbindung zur Solana Blockchain
+                    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
+
+                    // Tokenkonten der Adresse abrufen
+                    const tokenAccounts = await connection.getTokenAccountsByOwner(
+                        new solanaWeb3.PublicKey(walletAddress),
+                        { mint: new solanaWeb3.PublicKey(LAI_TOKEN_MINT) }
+                    );
+
+                    let balance = 0;
+                    if (tokenAccounts.value.length > 0) {
+                        // Tokenkontostand auslesen
+                        const tokenAccountInfo = await connection.getParsedAccountInfo(tokenAccounts.value[0].pubkey);
+                        balance = tokenAccountInfo.value.data.parsed.info.tokenAmount.uiAmount;
+                    }
+
+                    document.getElementById("lai-balance").textContent = `LAI Balance: ${balance}`;
+                } catch (error) {
+                    console.error("Fehler beim Verbinden oder Abrufen:", error);
+                    alert("Fehler beim Verbinden oder Abrufen der Balance.");
+                }
+            } else {
+                alert("Bitte installiere die Phantom Wallet Erweiterung!");
+            }
+        });
+    </script>
+</body>
+</html>
