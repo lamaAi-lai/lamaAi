@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Wallet Debug</title>
+    <!-- Solana Web3.js Bibliothek -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/@solana/web3.js/1.83.0/web3.min.js"></script>
+</head>
+<body>
+    <h1>Phantom Wallet Debug</h1>
+    <button id="connect-wallet">Verbinde Wallet</button>
+    <p id="wallet-address">Wallet-Adresse: Noch nicht verbunden</p>
+    <p id="sol-balance">SOL Balance: Noch nicht abgefragt</p>
+    <p id="lai-balance">LAI Balance: Noch nicht abgefragt</p>
+
+    <script>
+        const LAI_TOKEN_MINT = "7MyasstD6GskYXy8GQN1B1tmYNvxAZN9vjUZHCz5pump";
+
+        async function connectWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    console.log("Versuche, die Phantom Wallet zu verbinden...");
+
+                    // Verbindung zur Phantom Wallet herstellen
+                    const response = await window.solana.connect();
+                    const walletAddress = response.publicKey.toString();
+                    console.log("Wallet verbunden:", walletAddress);
+                    document.getElementById("wallet-address").textContent = `Wallet-Adresse: ${walletAddress}`;
+
+                    // Verbindung zur Solana Blockchain
+                    const connection = new solanaWeb3.Connection(
+                        solanaWeb3.clusterApiUrl("mainnet-beta"),
+                        "confirmed"
+                    );
+                    console.log("Verbindung zum Solana Mainnet hergestellt.");
+
+                    // SOL Balance abrufen
+                    const solBalanceLamports = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
+                    const solBalance = solBalanceLamports / solanaWeb3.LAMPORTS_PER_SOL;
+                    console.log("SOL Balance:", solBalance);
+                    document.getElementById("sol-balance").textContent = `SOL Balance: ${solBalance.toFixed(4)} SOL`;
+
+                    // LAI Token Balance abrufen
+                    console.log("Abrufen der LAI-Token-Konten...");
+                    const tokenAccounts = await connection.getTokenAccountsByOwner(
+                        new solanaWeb3.PublicKey(walletAddress),
+                        { mint: new solanaWeb3.PublicKey(LAI_TOKEN_MINT) }
+                    );
+
+                    console.log("Gefundene Token-Konten:", tokenAccounts.value);
+
+                    let laiBalance = 0;
+                    if (tokenAccounts.value.length > 0) {
+                        console.log("Parsing Token-Konto...");
+                        const tokenAccountInfo = await connection.getParsedAccountInfo(tokenAccounts.value[0].pubkey);
+                        console.log("Token-Kontoinformationen:", tokenAccountInfo);
+                        laiBalance = tokenAccountInfo.value.data.parsed.info.tokenAmount.uiAmount;
+                    } else {
+                        console.log("Kein Token-Konto für LAI gefunden.");
+                    }
+
+                    document.getElementById("lai-balance").textContent = `LAI Balance: ${laiBalance}`;
+                    console.log("LAI Balance:", laiBalance);
+
+                } catch (error) {
+                    console.error("Fehler:", error);
+                    alert(`Fehler: ${error.message}`);
+                }
+            } else {
+                alert("Bitte installiere die Phantom Wallet Erweiterung!");
+            }
+        }
+
+        document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+    </script>
+</body>
+</html>
