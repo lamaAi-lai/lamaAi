@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Balance Checker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.41.1/dist/web3.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #connectWallet {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #balance {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Solana Wallet Balance Checker</h1>
+    <button id="connectWallet">Connect Wallet</button>
+    <div id="balance"></div>
+
+    <script>
+        document.getElementById('connectWallet').addEventListener('click', async () => {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    // Request wallet connection
+                    const response = await window.solana.connect();
+                    const publicKey = response.publicKey.toString();
+
+                    // Display public key
+                    document.getElementById('balance').textContent = `Connected Wallet: ${publicKey}`;
+
+                    // Fetch and display balance
+                    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+                    const balance = await connection.getBalance(new solanaWeb3.PublicKey(publicKey));
+                    const solBalance = balance / solanaWeb3.LAMPORTS_PER_SOL;
+
+                    document.getElementById('balance').textContent += `\nBalance: ${solBalance} SOL`;
+                } catch (error) {
+                    console.error('Connection error:', error);
+                    document.getElementById('balance').textContent = 'Error connecting to wallet.';
+                }
+            } else {
+                alert('Phantom Wallet not found. Please install Phantom Wallet extension.');
+            }
+        });
+    </script>
+</body>
+</html>
