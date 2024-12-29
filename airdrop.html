@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LamaAi (LAI) Airdrop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #1e3c72, #2a5298);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 50px;
+            font-size: 2.5rem;
+        }
+        .countdown {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+        .info {
+            margin: 30px 0;
+            font-size: 1.2rem;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #ff6f61;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #e85e55;
+        }
+    </style>
+    <script>
+        function updateCountdown() {
+            const targetDate = new Date("2025-02-01T00:00:00Z").getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerText = "Airdrop verfügbar!";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerText = 
+                `${days} Tage ${hours} Stunden ${minutes} Minuten ${seconds} Sekunden`;
+        }
+
+        setInterval(updateCountdown, 1000);
+    </script>
+</head>
+<body>
+    <h1>LamaAi (LAI) Airdrop</h1>
+    <div class="countdown" id="countdown"></div>
+    <div class="info">
+        Der LamaAi (LAI) Token ist ein auf Solana basierender Token. <br>
+        Contract-Adresse: <strong>CqtCsgGdahVX9UahpekJTaAUxafKp7TXGZhdPQkGsbdP</strong>
+    </div>
+    <div class="info">
+        Der Token kann derzeit nur über <a href="https://jup.ag/swap/SOL-CqtCsgGdahVX9UahpekJTaAUxafKp7TXGZhdPQkGsbdP" class="button" target="_blank">Jupiter Aggregator</a> gekauft werden.
+    </div>
+</body>
+</html>
